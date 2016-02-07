@@ -1,13 +1,16 @@
 (function () {
 
+  // Holds the last tabId which we triggered the "find-version" action for.
+  var lastTabId;
+
   // Triggers a "find version" action when switching tab.
   chrome.tabs.onActivated.addListener(function (activeInfo) {
-    chrome.tabs.sendMessage(activeInfo.tabId, "find-version");
+    sendFindAction(activeInfo.tabId);
   });
 
   // Triggers a "find version" action when a tab gets a new URL.
   chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
-    chrome.tabs.sendMessage(tabId, "find-version");
+    sendFindAction(tabId);
   });
 
   // Listens for the found version and updates the extension badge.
@@ -22,6 +25,15 @@
     }
     return true;
   });
+
+  function sendFindAction (tabId) {
+    if (tabId === lastTabId) {
+      return; // Already sent message for current tab. No need to update version again.
+    }
+
+    chrome.tabs.sendMessage(tabId, "find-version");
+    lastTabId = tabId;
+  }
 
   /**
    * Returns a hex color based on the accuracy.

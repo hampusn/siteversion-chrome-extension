@@ -1,13 +1,13 @@
 (function (window, document) {
-  
+
   // Listens for "find-version" action and triggers the version finding.
   chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
     if (message === "find-version") {
       if (document.readyState === 'loading') {
-        document.addEventListener("DOMContentLoaded", findVersionsCallback, true);
+        document.addEventListener("DOMContentLoaded", findVersionsCallback);
       } else {
         findVersionsCallback();
-      }  
+      }
     }
   });
 
@@ -64,6 +64,8 @@
       el = linkElements[i];
       href = el.getAttribute('href');
 
+      // Matches all hrefs which contains "sitevision" in the structure 
+      // followed by a "versiony" string.
       matches = href.match(/\/sitevision\/([\d]+[\w.-]+)\//i);
 
       if (matches && matches[1] && versions.indexOf(matches[1]) === -1) {
