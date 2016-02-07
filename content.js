@@ -1,5 +1,6 @@
 (function (window, document) {
   
+  // Listens for "find-version" action and triggers the version finding.
   chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
     if (message === "find-version") {
       if (document.readyState === 'loading') {
@@ -10,6 +11,12 @@
     }
   });
 
+  /**
+   * Callback function which tries to determine the used version 
+   * and sends a message back to background.js.
+   * 
+   * @return {void}
+   */
   function findVersionsCallback () {
     var linkElements, foundVersions, version, versionShort, accuracy;
 
@@ -18,23 +25,23 @@
 
     if (foundVersions.length === 1) {
       // Pretty sure
-      version = foundVersions[0];
+      version      = foundVersions[0];
       versionShort = shortVersion(version);
-      accuracy = 1;
+      accuracy     = 1;
     } else if (foundVersions.length >= 1) {
       // Inconclusive
-      version = foundVersions[0];
+      version      = foundVersions[0];
       versionShort = shortVersion(version);
-      accuracy = 0.5;
+      accuracy     = 0.5;
     } else {
       // Nothing found
-      version = "";
+      version      = "";
       versionShort = "N/A";
-      accuracy = 0;
+      accuracy     = 0;
     }
 
     chrome.extension.sendMessage({
-      "type": "dom-loaded", 
+      "type": "found-version", 
       "data": {
         "version":      version,
         "versionShort": versionShort,
@@ -43,6 +50,13 @@
     });
   }
 
+  /**
+   * Takes an array of DOMElements and tries to find possible versions from the href attribute.
+   * Returns a list of versions.
+   * 
+   * @param  {array} linkElements
+   * @return {array}
+   */
   function sitevisionVersions (linkElements) {
     var el, href, matches, versions = [];
 
@@ -60,6 +74,12 @@
     return versions;
   }
 
+  /**
+   * Takes a full version string and returns MAJOR[.MINOR[.POINT]]
+   * 
+   * @param  {string} version The full version string
+   * @return {string}
+   */
   function shortVersion (version) {
     var matches = version.match(/^(\d+\.)?(\d+\.)?(\*|\d+)/i);
     if (matches) {

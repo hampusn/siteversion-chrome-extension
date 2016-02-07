@@ -3,7 +3,7 @@
 
   "name": "SiteVersion",
   "description": "Checks which version of SiteVision the current website is running.",
-  "version": "0.0.1",
+  "version": "0.0.2",
 
   "author": "Hampus Nordin <nordin.hampus@gmail.com>",
   "homepage_url": "https://github.com/hampusn/siteversion-chrome-extension",
