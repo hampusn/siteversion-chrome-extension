@@ -66,12 +66,13 @@
 
       // Matches all hrefs which contains "sitevision" in the structure 
       // followed by a "versiony" string.
-      matches = href.match(/\/sitevision\/([\d]+[\w.-]+)\//i);
+      matches = href.match(/\/(sitevision|edit-static)\/([\d]+[\w.-]+)\//i);
 
-      if (matches && matches[1] && versions.indexOf(matches[1]) === -1) {
-        versions.push(matches[1]);
+      // Matches[2] contains the "versiony" string.
+      if (matches && matches[2] && versions.indexOf(matches[2]) === -1) {
+        versions.push(matches[2]);
       }
-    };
+    }
 
     return versions;
   }
